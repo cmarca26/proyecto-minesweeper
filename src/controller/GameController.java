@@ -6,97 +6,35 @@ import model.*;
 public class GameController {
 
     // Atributos principales del juego
-    private Player player;
-    private GameState state;
+    private Game game;
     private Board board;
-    private long startTime;
-    private long endTime;
 
-    // Constructor: inicializa el jugador y el estado
-    public GameController() {
-        this.player = new Player();
-        this.state = GameState.IN_PROGRESS;
-        this.board = new Board();
-    }
+    public void startGame() {
 
-    // Inicia el juego y registra el tiempo de inicio
-    public void start() {
-        startTime = System.currentTimeMillis();
-        state = GameState.IN_PROGRESS;
-    }
+        // pedir nombre del jugador
 
-    // Finaliza el juego
-    public void finish() {
-        this.state = GameState.LOST;
-        this.endTime = System.currentTimeMillis();
-    }
+        // pedir numero de minas
 
-    // Reinicia el juego con nuevos parametros
-    public void reset() {
-        this.player = new Player();
-        this.state = GameState.IN_PROGRESS;
-        this.board = new Board();
-        this.startTime = System.currentTimeMillis();
-        this.endTime = 0;
-    }
+        game = new Game();
+        game.start();
 
-    // Devuelve el estado actual del juego
-    public GameState getState() {
-        return state;
-    }
+        while (!game.isGameOver()) {
 
-    // Devuelve el jugador
-    public Player getPlayer() {
-        return player;
-    }
+            // mostrar el tablero
+            board.displayBoard(false);
 
-    // Devuelve el puntaje actual del jugador
-    public int getScore() {
-        return player.getScore();
-    }
+            // pedir accion al jugador (descubrir o marcar celda)
+            // pedir coordenadas de la celda
 
-    // Devuelve el tiempo jugado en segundos
-    public long getElapsedTime() {
-        if (state == GameState.IN_PROGRESS) {
-            return (System.currentTimeMillis() - startTime) / 1000;
-        } else {
-            return (endTime - startTime) / 1000;
+            // convertir coordenadas a fila y columna
+
+            // segun
+            // si es descubrir celda
+            // si es marcar celda
         }
-    }
-    
-    // Devuelve el tablero para que ConsoleView pueda acceder
-    public Board getBoard() {
-        return board;
-    }
-    
-    // Realiza un movimiento del jugador (revelar casilla)
-    public boolean makeMove(int row, int col) {
-        if (state != GameState.IN_PROGRESS) {
-            return false; // No se puede jugar si ya terminó
-        }
-        
-        boolean safe = board.revealCell(row, col);
-        
-        if (!safe) {
-            // Se reveló una mina - DERROTA
-            this.state = GameState.LOST;
-            this.endTime = System.currentTimeMillis();
-            board.revealAllMines();
-            return false;
-        } else if (board.isGameWon()) {
-            // Se revelaron todas las casillas seguras - VICTORIA
-            this.state = GameState.WON;
-            this.endTime = System.currentTimeMillis();
-            return true;
-        }
-        
-        return true; // Movimiento exitoso, juego continúa
-    }
-    
-    // Marca o desmarca una bandera
-    public void toggleFlag(int row, int col) {
-        if (state == GameState.IN_PROGRESS) {
-            board.toggleFlag(row, col);
-        }
+
+        // mostrar el tablero
+        board.displayBoard(false);
+        game.showResults();
     }
 }
