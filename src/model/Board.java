@@ -241,36 +241,39 @@ public class Board {
     
     /**
      * Método para mostrar el tablero en consola (útil para debug)
+     *
      * @param showAll si es true, muestra todas las casillas incluyendo minas
      */
     public void displayBoard(boolean showAll) {
-        System.out.println("\n   1 2 3 4 5 6 7 8 9 10");
+        System.out.println("\n    1   2   3   4   5   6   7   8   9  10");
         char[] letters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
-        
+
         for (int row = 0; row < BOARD_SIZE; row++) {
             System.out.print(letters[row] + "  ");
             for (int col = 0; col < BOARD_SIZE; col++) {
                 Cell cell = cells[row][col];
+                String displayValue = "?";
+
                 if (showAll) {
-                    // Mostrar todo: minas como X, números o V para espacios vacíos
                     if (cell.isMine()) {
-                        System.out.print("X ");
-                    } else {
-                        EmptyCell emptyCell = (EmptyCell) cell;
-                        if (emptyCell.getAdjacentMines() == 0) {
-                            System.out.print("V ");
-                        } else {
-                            System.out.print(emptyCell.getAdjacentMines() + " ");
-                        }
+                        displayValue = "X";
+                    } else if (cell instanceof EmptyCell) {
+                        int adjacent = ((EmptyCell) cell).getAdjacentMines();
+                        displayValue = (adjacent == 0) ? "V" : Integer.toString(adjacent);
                     }
-                } else if (cell.isRevealed() || cell.isFlagged()) {
-                    System.out.print(cell.getDisplayValue() + " ");
+                    System.out.print(String.format("[%1s] ", displayValue));
                 } else {
-                    System.out.print("? ");
+                    if (cell.isRevealed() || cell.isFlagged()) {
+                        displayValue = cell.getDisplayValue() + ""; // convierte char a String
+                        System.out.print(String.format("[%1s] ", displayValue));
+                    } else {
+                        System.out.print("[?] ");
+                    }
                 }
             }
             System.out.println();
         }
         System.out.println();
     }
+
 }
