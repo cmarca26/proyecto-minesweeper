@@ -59,7 +59,7 @@ public class FileManager {
             return new String[0];
         }
         
-        File[] files = saveDir.listFiles((dir, name) -> name.endsWith(FILE_EXTENSION));
+        File[] files = saveDir.listFiles((_, name) -> name.endsWith(FILE_EXTENSION));
         if (files == null) {
             return new String[0];
         }
