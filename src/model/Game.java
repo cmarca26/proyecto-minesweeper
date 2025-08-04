@@ -39,6 +39,16 @@ public class Game {
     public GameState getState() {
         return state;
     }
+    
+    // Método alternativo para compatibilidad
+    public GameState getGameState() {
+        return state;
+    }
+    
+    // Establece el estado del juego (para cargar partidas)
+    public void setGameState(GameState newState) {
+        this.state = newState;
+    }
 
     // Devuelve el jugador
     public Player getPlayer() {

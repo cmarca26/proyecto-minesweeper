@@ -1,10 +1,13 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Clase abstracta que representa una casilla del tablero de Buscaminas.
  * Utiliza polimorfismo para manejar diferentes tipos de casillas.
  */
-public abstract class Cell {
+public abstract class Cell implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     protected boolean isRevealed;
     protected boolean isFlagged;

@@ -1,26 +1,45 @@
 package model;
 
 import java.util.Random;
+import java.io.Serializable;
 
 /**
  * Clase que representa el tablero del juego Buscaminas.
  * Maneja la matriz de celdas, colocación de minas y lógica del juego.
  */
-public class Board {
+public class Board implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     public static final int BOARD_SIZE = 10;
-    public static final int TOTAL_MINES = 10;
+    public static final int MIN_MINES = 10;
+    public static final int MAX_MINES = 15;
     
     private Cell[][] cells;
     private int revealedCells;
+    private int totalMines;
     private Random random;
     
     /**
-     * Constructor del tablero
+     * Constructor del tablero con número de minas por defecto
      */
     public Board() {
+        this(MIN_MINES); // Usar mínimo por defecto
+    }
+    
+    /**
+     * Constructor del tablero con número específico de minas
+     * @param numMines número de minas (entre MIN_MINES y MAX_MINES)
+     */
+    public Board(int numMines) {
+        if (numMines < MIN_MINES || numMines > MAX_MINES) {
+            throw new IllegalArgumentException(
+                "Número de minas debe estar entre " + MIN_MINES + " y " + MAX_MINES
+            );
+        }
+        
         this.cells = new Cell[BOARD_SIZE][BOARD_SIZE];
         this.revealedCells = 0;
+        this.totalMines = numMines;
         this.random = new Random();
         initializeBoard();
         placeMines();
@@ -44,7 +63,7 @@ public class Board {
     private void placeMines() {
         int minesPlaced = 0;
         
-        while (minesPlaced < TOTAL_MINES) {
+        while (minesPlaced < totalMines) {
             int row = random.nextInt(BOARD_SIZE);
             int col = random.nextInt(BOARD_SIZE);
             
@@ -185,7 +204,7 @@ public class Board {
      * @return true si todas las casillas sin minas están reveladas
      */
     public boolean isGameWon() {
-        int totalSafeCells = (BOARD_SIZE * BOARD_SIZE) - TOTAL_MINES;
+        int totalSafeCells = (BOARD_SIZE * BOARD_SIZE) - totalMines;
         return revealedCells == totalSafeCells;
     }
     
@@ -215,7 +234,24 @@ public class Board {
      * @return número total de minas
      */
     public int getTotalMines() {
-        return TOTAL_MINES;
+        return totalMines;
+    }
+    
+    /**
+     * Valida si un número de minas es válido
+     * @param numMines número de minas a validar
+     * @return true si está en el rango permitido
+     */
+    public static boolean isValidMineCount(int numMines) {
+        return numMines >= MIN_MINES && numMines <= MAX_MINES;
+    }
+    
+    /**
+     * Obtiene el rango válido de minas como texto
+     * @return string con el rango (ej: "10-15")
+     */
+    public static String getValidMineRange() {
+        return MIN_MINES + "-" + MAX_MINES;
     }
     
     /**
